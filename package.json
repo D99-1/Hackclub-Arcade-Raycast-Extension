@@ -11,10 +11,31 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "index",
+      "name": "menu-bar",
       "title": "Manage Session",
       "description": "Manage your Arcade session from the menu bar",
       "mode": "menu-bar",
+      "icon": "hackclub.png"
+    },
+    {
+      "name": "startSession",
+      "title": "Start New Session",
+      "description": "Start a new Arcade session",
+      "mode": "view",
+      "icon": "hackclub.png"
+    },
+    {
+      "name": "pauseSession",
+      "title": "Pause/Resume Session",
+      "description": "Pause your existing Arcade session",
+      "mode": "no-view",
+      "icon": "hackclub.png"
+    },
+    {
+      "name": "endSession",
+      "title": "End Session",
+      "description": "End your existing Arcade session",
+      "mode": "view",
       "icon": "hackclub.png"
     }
   ],

@@ -18,13 +18,25 @@ type ExtensionPreferences = {
 declare type Preferences = ExtensionPreferences
 
 declare namespace Preferences {
-  /** Preferences accessible in the `index` command */
-  export type Index = ExtensionPreferences & {}
+  /** Preferences accessible in the `menu-bar` command */
+  export type MenuBar = ExtensionPreferences & {}
+  /** Preferences accessible in the `startSession` command */
+  export type StartSession = ExtensionPreferences & {}
+  /** Preferences accessible in the `pauseSession` command */
+  export type PauseSession = ExtensionPreferences & {}
+  /** Preferences accessible in the `endSession` command */
+  export type EndSession = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
-  /** Arguments passed to the `index` command */
-  export type Index = {}
+  /** Arguments passed to the `menu-bar` command */
+  export type MenuBar = {}
+  /** Arguments passed to the `startSession` command */
+  export type StartSession = {}
+  /** Arguments passed to the `pauseSession` command */
+  export type PauseSession = {}
+  /** Arguments passed to the `endSession` command */
+  export type EndSession = {}
 }
 
 
