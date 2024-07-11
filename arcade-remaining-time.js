@@ -3,12 +3,12 @@
 // Required parameters:
 // @raycast.schemaVersion 1
 // @raycast.title Arcade Session
-// @raycast.mode silent
+// @raycast.mode inline
 
 // Optional parameters:
 // @raycast.icon 🕹️ 
-// @raycast.argument1 { "type": "text", "placeholder": "Description" }
 // @raycast.packageName Hack Club Arcade
+// @raycast.refreshTime 1m
 
 // Documentation:
 // @raycast.description Start an Arcade Session
@@ -21,21 +21,16 @@ require('dotenv').config()
 const apiKey = process.env.API_KEY;
 const userID = process.env.USER_ID;
 
-const description = process.argv[2];
-const url = `https://hackhour.hackclub.com/api/start/${userID}`;
+const url = `https://hackhour.hackclub.com/api/session/${userID}`;
 
-const data = {
-    work: description
-};
-
-axios.post(url, data, {
+axios.get(url, {
     headers: {
         'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
     }
 }).then(response => {
-    console.log(`Arcade Session Started: ${description}`);
+   response = response.data.data["remaining"];
+   console.log(`${response} Minutes Remaining!`);
 }).catch(error => {
-    console.error(`Error starting Arcade Session: ${error}`);
+    console.error(error);
 });
 
