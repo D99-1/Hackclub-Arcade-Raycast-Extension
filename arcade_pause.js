@@ -2,12 +2,11 @@
 
 // Required parameters:
 // @raycast.schemaVersion 1
-// @raycast.title Start Session
+// @raycast.title Pause/Resume Session
 // @raycast.mode silent
 
 // Optional parameters:
 // @raycast.icon 🕹️ 
-// @raycast.argument1 { "type": "text", "placeholder": "Description" }
 // @raycast.packageName Hack Club Arcade
 
 // Documentation:
@@ -21,21 +20,16 @@ require('dotenv').config()
 const apiKey = process.env.API_KEY;
 const userID = process.env.USER_ID;
 
-const description = process.argv[2];
-const url = `https://hackhour.hackclub.com/api/start/${userID}`;
+const url = `https://hackhour.hackclub.com/api/pause/${userID}`;
 
-const data = {
-    work: description
-};
-
-axios.post(url, data, {
+axios.post(url, {}, {
     headers: {
         'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
     }
 }).then(response => {
-    console.log(`Arcade Session Started: ${description}`);
+    response = response.data.data["paused"];
+    console.log(`Session ${response ? 'Paused' : 'Resumed'}!`);
 }).catch(error => {
-    console.error(`Error starting Arcade Session: ${error}`);
+    console.error(`Error: ${error}`);
 });
 

@@ -2,7 +2,7 @@
 
 // Required parameters:
 // @raycast.schemaVersion 1
-// @raycast.title Arcade Session
+// @raycast.title Current Session
 // @raycast.mode inline
 
 // Optional parameters:
@@ -11,7 +11,7 @@
 // @raycast.refreshTime 1m
 
 // Documentation:
-// @raycast.description Start an Arcade Session
+// @raycast.description Manage your Arcade Sessions
 // @raycast.author Dhyan99
 // @raycast.authorURL https://github.com/d99-1
 
