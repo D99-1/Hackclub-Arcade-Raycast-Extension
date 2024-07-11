@@ -25,7 +25,7 @@ export default function Command() {
         }
       }).catch((error) => {
         console.error("Error:", error);
-        showToast(Toast.Style.Failure, "Error", "Failed to fetch session data");
+        showToast(Toast.Style.Failure, "Error: Rate Limit Probably Exceeded", "Failed to fetch session data");
       })
   }
 
@@ -42,7 +42,7 @@ export default function Command() {
       setTotalMinutes(data.data.total);
   }).catch((error) => {
     console.error("Error:", error);
-    showToast(Toast.Style.Failure, "Error", "Failed to fetch session data");
+    showToast(Toast.Style.Failure, "Error: Rate Limit Probably Exceeded", "Failed to fetch session data");
   })
 }
 
@@ -56,6 +56,7 @@ if(running){
     <MenuBarExtra icon="hackclub.png">
       <MenuBarExtra.Section title={menuTitle} />
       <MenuBarExtra.Item title="Pause/Resume Session" onAction={()=>launchCommand({name:"pauseSession",type:LaunchType.UserInitiated})} />  
+      <MenuBarExtra.Item title="End Session" onAction={()=>launchCommand({name:"endSession",type:LaunchType.UserInitiated})} />
       <MenuBarExtra.Item title="Start Session" />  
       <MenuBarExtra.Submenu title="Stats">
       <MenuBarExtra.Item title={`${sessions} Sessions`} />
@@ -67,8 +68,9 @@ if(running){
   return (
     <MenuBarExtra icon="hackclub.png">
       <MenuBarExtra.Section title={menuTitle} />
-      <MenuBarExtra.Item title="Start Session" onAction={getTime}/>  
-      <MenuBarExtra.Item title="Pause/Resume Session"  />  
+      <MenuBarExtra.Item title="Start Session" onAction={()=>launchCommand({name:"startSession",type:LaunchType.UserInitiated})}/>  
+      <MenuBarExtra.Item title="Pause/Resume Session"/>  
+      <MenuBarExtra.Item title="End Session" />
       <MenuBarExtra.Submenu title="Stats">
       <MenuBarExtra.Item title={`${sessions} Sessions`} />
       <MenuBarExtra.Item title={`${totalMinutes} Total Minutes`} />
