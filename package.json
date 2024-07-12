@@ -14,29 +14,25 @@
       "name": "menu-bar",
       "title": "Manage Session",
       "description": "Manage your Arcade session from the menu bar",
-      "mode": "menu-bar",
-      "icon": "hackclub.png"
+      "mode": "menu-bar"
     },
     {
       "name": "start-session",
       "title": "Start New Session",
       "description": "Start a new Arcade session",
-      "mode": "view",
-      "icon": "hackclub.png"
+      "mode": "view"
     },
     {
       "name": "pause-session",
       "title": "Pause/Resume Session",
       "description": "Pause your existing Arcade session",
-      "mode": "no-view",
-      "icon": "hackclub.png"
+      "mode": "no-view"
     },
     {
       "name": "end-session",
       "title": "End Session",
       "description": "End your existing Arcade session",
-      "mode": "no-view",
-      "icon": "hackclub.png"
+      "mode": "no-view"
     }
   ],
   "preferences": [
