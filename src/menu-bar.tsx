@@ -56,8 +56,9 @@ export default function Command() {
         setSessions(data.data.sessions);
         setTotalMinutes(data.data.total);
       })
-      .catch(() => {
+      .catch((e) => {
         showToast(Toast.Style.Failure, "Error: Rate Limit Probably Exceeded", "Failed to fetch session data");
+        console.error(e)
       });
   };
 

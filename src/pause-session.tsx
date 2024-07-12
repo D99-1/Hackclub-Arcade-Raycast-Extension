@@ -9,13 +9,14 @@ export default async function pauseSession() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getPreferenceValues().apiToken}`,
       },
-    });
+    }).then((response)=>{
+      return response.json()
+    }).then((response:any)=>{
+      showHUD(response.data.paused ? "Session Paused Successfully!" : "Session Resumed Successfully!")
+      console.log(response.data.paused)
+    })
 
-    if (response.ok) {
-      showHUD("Session paused successfully!");
-    } else {
-      showHUD("Failed to pause session");
-    }
+ 
   } catch (error) {
     console.error("An error occurred", error);
   }
