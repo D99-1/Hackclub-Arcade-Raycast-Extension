@@ -35,7 +35,7 @@
       "name": "endSession",
       "title": "End Session",
       "description": "End your existing Arcade session",
-      "mode": "view",
+      "mode": "no-view",
       "icon": "hackclub.png"
     }
   ],
