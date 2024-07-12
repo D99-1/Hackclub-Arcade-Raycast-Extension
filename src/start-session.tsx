@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Action, Form, ActionPanel, showHUD, Toast, getPreferenceValues, showToast } from "@raycast/api";
+import { Action, Form, ActionPanel, showHUD, Toast, getPreferenceValues, showToast, popToRoot } from "@raycast/api";
 import fetch from "node-fetch";
 
 export default function startSession() {
@@ -18,6 +18,7 @@ export default function startSession() {
 
       if (response.ok) {
         await showHUD("Session started successfully!");
+        popToRoot();
       } else {
         await showToast({ style: Toast.Style.Failure, title: "Failed to start session" });
       }
