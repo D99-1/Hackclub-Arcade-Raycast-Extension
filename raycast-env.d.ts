@@ -26,6 +26,8 @@ declare namespace Preferences {
   export type PauseSession = ExtensionPreferences & {}
   /** Preferences accessible in the `end-session` command */
   export type EndSession = ExtensionPreferences & {}
+  /** Preferences accessible in the `session-history` command */
+  export type SessionHistory = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
@@ -37,6 +39,8 @@ declare namespace Arguments {
   export type PauseSession = {}
   /** Arguments passed to the `end-session` command */
   export type EndSession = {}
+  /** Arguments passed to the `session-history` command */
+  export type SessionHistory = {}
 }
 
 
