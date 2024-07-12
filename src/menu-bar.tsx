@@ -3,7 +3,7 @@ import { MenuBarExtra, showToast, Toast, getPreferenceValues, launchCommand, Lau
 import fetch from "node-fetch";
 
 export default function Command() {
-  const [menuTitle, setMenuTitle] = useState("");
+  const [menuTitle, setMenuTitle] = useState("Loading...");
   const [running, setRunning] = useState(false);
   const [sessions, setSessions] = useState(0);
   const [totalMinutes, setTotalMinutes] = useState(0);
@@ -75,7 +75,7 @@ export default function Command() {
   setRemaining(Number(getRemaining)-1)
   cache.set("remaining",(Number(getRemaining)-1).toString())
   */
-
+if(menuTitle !== "Loading..."){
   if (running) {
     return (
       <MenuBarExtra icon="hackclub.png" /*title={remaining.toString()}*/>
@@ -92,6 +92,7 @@ export default function Command() {
         <MenuBarExtra.Submenu title="Stats">
           <MenuBarExtra.Item title={`${sessions} Sessions`} />
           <MenuBarExtra.Item title={`${totalMinutes} Total Minutes`} />
+          <MenuBarExtra.Item title="View History" onAction={()=> launchCommand({name:"session-history", type: LaunchType.UserInitiated})} />
         </MenuBarExtra.Submenu>
       </MenuBarExtra>
     );
@@ -108,8 +109,24 @@ export default function Command() {
         <MenuBarExtra.Submenu title="Stats">
           <MenuBarExtra.Item title={`${sessions} Sessions`} />
           <MenuBarExtra.Item title={`${totalMinutes} Total Minutes`} />
+          <MenuBarExtra.Item title="View History" onAction={()=> launchCommand({name:"session-history", type: LaunchType.UserInitiated})} />
         </MenuBarExtra.Submenu>
       </MenuBarExtra>
     );
   }
+} else{
+  return(
+    <MenuBarExtra icon="hackclub.png">
+    <MenuBarExtra.Section title={menuTitle} />
+    <MenuBarExtra.Item title="Start Session"/>
+    <MenuBarExtra.Item title="Pause/Resume Session" />
+    <MenuBarExtra.Item title="End Session" />
+    <MenuBarExtra.Submenu title="Stats">
+      <MenuBarExtra.Item title={`${sessions} Sessions`} />
+      <MenuBarExtra.Item title={`${totalMinutes} Total Minutes`} />
+      <MenuBarExtra.Item title="View History" />
+    </MenuBarExtra.Submenu>
+  </MenuBarExtra>
+  )
+}
 }
