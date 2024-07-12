@@ -1,5 +1,7 @@
 import { getPreferenceValues } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
+import fetch from "node-fetch";
+
 
 interface SessionHistoryApiResponse {
   ok: boolean;
@@ -30,6 +32,7 @@ export interface CurrentSession {
   goal: string;
   paused: boolean;
   completed: boolean;
+  work: string;
   messageTs: string;
 }
 
@@ -39,8 +42,8 @@ interface StatsApiResponse {
 }
 
 export interface Stats {
-  sessions: 0;
-  total: 0;
+  sessions: number;
+  total: number;
 }
 
 export async function getSessionHistory() {
