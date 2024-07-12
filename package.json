@@ -14,7 +14,8 @@
       "name": "menu-bar",
       "title": "Manage Session",
       "description": "Manage your Arcade session from the menu bar",
-      "mode": "menu-bar"
+      "mode": "menu-bar",
+      "interval": "10s"
     },
     {
       "name": "start-session",

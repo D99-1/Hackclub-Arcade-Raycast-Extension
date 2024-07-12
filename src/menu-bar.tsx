@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MenuBarExtra, showToast, Toast, getPreferenceValues, launchCommand, LaunchType } from "@raycast/api";
+import { MenuBarExtra, showToast, Toast, getPreferenceValues, launchCommand, LaunchType,/* Cache */} from "@raycast/api";
 import fetch from "node-fetch";
 
 export default function Command() {
@@ -7,6 +7,9 @@ export default function Command() {
   const [running, setRunning] = useState(false);
   const [sessions, setSessions] = useState(0);
   const [totalMinutes, setTotalMinutes] = useState(0);
+  /*const [remaining, setRemaining] = useState(0);
+  const cache = new Cache();*/
+
   const getTime = async () => {
     setMenuTitle("Loading...");
     await fetch(`https://hackhour.hackclub.com/api/session/${getPreferenceValues().userid}`, {
@@ -26,6 +29,8 @@ export default function Command() {
               : `${data.data.remaining} Minute Remaining`
             : "No Active Session",
         );
+      /*  setRemaining(data.data.remaining);
+        cache.set("remaining",remaining.toString()) */
         if (data.data.remaining > 0) {
           setRunning(true);
         } else {
@@ -57,21 +62,30 @@ export default function Command() {
   };
 
   useEffect(() => {
-    getTime();
+    getTime()
     getStats();
+
+
   }, []);
+
+  /*
+  const getRemaining = cache.get("remaining")
+  console.log(getRemaining)
+  setRemaining(Number(getRemaining)-1)
+  cache.set("remaining",(Number(getRemaining)-1).toString())
+  */
 
   if (running) {
     return (
-      <MenuBarExtra icon="hackclub.png">
+      <MenuBarExtra icon="hackclub.png" /*title={remaining.toString()}*/>
         <MenuBarExtra.Section title={menuTitle} />
         <MenuBarExtra.Item
           title="Pause/Resume Session"
-          onAction={() => launchCommand({ name: "pauseSession", type: LaunchType.UserInitiated })}
+          onAction={() => launchCommand({ name: "pause-session", type: LaunchType.UserInitiated })}
         />
         <MenuBarExtra.Item
           title="End Session"
-          onAction={() => launchCommand({ name: "endSession", type: LaunchType.UserInitiated })}
+          onAction={() => launchCommand({ name: "end-session", type: LaunchType.UserInitiated })}
         />
         <MenuBarExtra.Item title="Start Session" />
         <MenuBarExtra.Submenu title="Stats">
@@ -86,7 +100,7 @@ export default function Command() {
         <MenuBarExtra.Section title={menuTitle} />
         <MenuBarExtra.Item
           title="Start Session"
-          onAction={() => launchCommand({ name: "startSession", type: LaunchType.UserInitiated })}
+          onAction={() => launchCommand({ name: "start-session", type: LaunchType.UserInitiated })}
         />
         <MenuBarExtra.Item title="Pause/Resume Session" />
         <MenuBarExtra.Item title="End Session" />
