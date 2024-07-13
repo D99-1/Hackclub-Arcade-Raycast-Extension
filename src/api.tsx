@@ -1,4 +1,4 @@
-import { getPreferenceValues } from "@raycast/api";
+import { getPreferenceValues, PopToRootType, showHUD } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
 import fetch from "node-fetch";
 
@@ -144,6 +144,78 @@ export async function getGoals() {
     const goals: Goal[] = data.data;
 
     return goals;
+  } catch (error) {
+    console.error("An error occurred", error);
+  }
+}
+
+export async function startSession(work: string) {
+  try {
+    const response = await fetch(`https://hackhour.hackclub.com/api/start/${getPreferenceValues().userid}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getPreferenceValues().apiToken}`,
+      },
+      body: JSON.stringify({ work: work }),
+    });
+
+    if (!response.ok) {
+      await showFailureToast(response.statusText, { title: "Failed to start session" });
+    }
+
+    await showHUD("Session started successfully!", { popToRootType: PopToRootType.Default });
+  } catch (error) {
+    console.error("An error occurred", error);
+  }
+}
+
+export async function endSession() {
+  try {
+    const response = await fetch(`https://hackhour.hackclub.com/api/end/${getPreferenceValues().userid}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getPreferenceValues().apiToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      await showHUD("Failed to end session");
+    }
+
+    await showHUD("Session ended successfully!");
+  } catch (error) {
+    console.error("An error occurred", error);
+  }
+}
+
+interface PauseApiResponse {
+  ok: boolean;
+  data: {
+    id: string;
+    slackId: string;
+    createdAt: string;
+    paused: true;
+  };
+}
+
+export async function pauseSession() {
+  try {
+    const response = await fetch(`https://hackhour.hackclub.com/api/pause/${getPreferenceValues().userid}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getPreferenceValues().apiToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      await showHUD("Failed to end session");
+    }
+    const data = (await response.json()) as PauseApiResponse;
+
+    await showHUD(data?.data.paused ? "Session Paused Successfully!" : "Session Resumed Successfully!");
   } catch (error) {
     console.error("An error occurred", error);
   }

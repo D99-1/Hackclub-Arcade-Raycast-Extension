@@ -15,7 +15,7 @@
       "title": "Manage Session",
       "description": "Manage your Arcade session from the menu bar",
       "mode": "menu-bar",
-      "interval": "10s"
+      "interval": "30s"
     },
     {
       "name": "start-session",
@@ -47,7 +47,7 @@
       "name": "apiToken",
       "title": "API Token",
       "description": "Your Hack Club Arcade API token",
-      "type": "textfield",
+      "type": "password",
       "required": true,
       "placeholder": "Run /api in #arcade on Slack to get your API token"
     },

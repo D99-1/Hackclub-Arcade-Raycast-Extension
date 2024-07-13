@@ -1,30 +1,13 @@
 import React, { useState } from "react";
 import { Action, Form, ActionPanel, showHUD, Toast, getPreferenceValues, showToast, popToRoot } from "@raycast/api";
 import fetch from "node-fetch";
+import { startSession } from "./api";
 
-export default function startSession() {
+export default function StartSession() {
   const [description, setDescription] = useState("");
 
   const handleSubmit = async () => {
-    try {
-      const response = await fetch(`https://hackhour.hackclub.com/api/start/${getPreferenceValues().userid}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getPreferenceValues().apiToken}`,
-        },
-        body: JSON.stringify({ work: description }),
-      });
-
-      if (response.ok) {
-        await showHUD("Session started successfully!");
-        popToRoot();
-      } else {
-        await showToast({ style: Toast.Style.Failure, title: "Failed to start session" });
-      }
-    } catch (error) {
-      console.error("An error occurred", error);
-    }
+    startSession(description);
   };
 
   return (

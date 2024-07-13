@@ -14,7 +14,7 @@ import { useCachedPromise } from "@raycast/utils";
 import { CurrentSession, getCurrentSession, getGoals, getStats, Goal, Stats } from "./api";
 
 export default function Command() {
-  const { data: currentSessionData } = useCachedPromise(getCurrentSession);
+  const { data: currentSessionData, revalidate } = useCachedPromise(getCurrentSession);
   const { data: statsData } = useCachedPromise(getStats);
   const { data: goalsData } = useCachedPromise(getGoals);
 
