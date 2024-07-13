@@ -11,11 +11,12 @@ import {
 } from "@raycast/api";
 import fetch from "node-fetch";
 import { useCachedPromise } from "@raycast/utils";
-import { getCurrentSession, getStats } from "./api";
+import { CurrentSession, getCurrentSession, getStats } from "./api";
 
 export default function Command() {
   const { data: currentSessionData } = useCachedPromise(getCurrentSession);
   const { data: statsData } = useCachedPromise(getStats);
+
   /*const [remaining, setRemaining] = useState(0);
   const cache = new Cache();*/
 
@@ -25,61 +26,12 @@ export default function Command() {
   setRemaining(Number(getRemaining)-1)
   cache.set("remaining",(Number(getRemaining)-1).toString())
   */
- console.log(currentSessionData)
-
-  const calculateRemainingTime = () => {
-    if (currentSessionData?.endTime) {
-      const endTime = new Date(currentSessionData.endTime);
-      const currentTime = new Date();
-      const difference = endTime.getTime() - currentTime.getTime();
-      const minutes = Math.floor((difference / (1000 * 60)) % 60);
-      const seconds = Math.floor((difference / 1000) % 60);
-      return `${minutes}m ${seconds}s`;
-    }
-    return "-";
-  };
 
   return (
     <MenuBarExtra icon="hackclub.png">
-      <MenuBarExtra.Item
-        icon={Icon.Alarm}
-        title={"Remaining Time"}
-        subtitle={calculateRemainingTime()}
-        onAction={() => {}}
-      />
-      <MenuBarExtra.Section title="Current Session">
-        <MenuBarExtra.Item
-          icon={Icon.BulletPoints}
-          title={"Work"}
-          subtitle={currentSessionData?.work ? currentSessionData.work.slice(0, 10) + "..." : "-"}
-          tooltip={currentSessionData?.work ? currentSessionData.work : undefined}
-          onAction={() => {}}
-        />
-        <MenuBarExtra.Item
-          icon={Icon.Clock}
-          title={"Session Length"}
-          subtitle={currentSessionData?.remaining ? currentSessionData.remaining.toString() + "m" : "-"}
-          onAction={() => {}}
-        />
-        <MenuBarExtra.Item
-          icon={Icon.Bolt}
-          title={"Goal"}
-          subtitle={currentSessionData?.goal ? currentSessionData.goal : "-"}
-          onAction={() => {}}
-        />
-        <MenuBarExtra.Item
-          icon={
-            currentSessionData?.paused
-              ? currentSessionData?.paused == true
-                ? Icon.LightBulbOff
-                : Icon.LightBulb
-              : Icon.LightBulb
-          }
-          title={"Status"}
-          subtitle={currentSessionData?.paused !== undefined ? (currentSessionData.paused ? "Paused" : "Running") : "-"}
-          onAction={() => {}}
-        />
-      </MenuBarExtra.Section>
+      <TopMenuBarItem currentSession={currentSessionData} />
+      <SessionInfoItems currentSession={currentSessionData} />
+
       <MenuBarExtra.Section>
         <MenuBarExtra.Item
           icon={Icon.StarCircle}
@@ -135,65 +87,83 @@ export default function Command() {
       </MenuBarExtra.Section>
     </MenuBarExtra>
   );
+}
 
-  // if (menuTitle !== "Loading...") {
-  //   if (running) {
-  //     return (
-  //       <MenuBarExtra icon="hackclub.png" /*title={remaining.toString()}*/>
-  //         <MenuBarExtra.Section title={menuTitle} />
-  //         <MenuBarExtra.Item
-  //           title="Pause/Resume Session"
-  //           onAction={() => launchCommand({ name: "pause-session", type: LaunchType.UserInitiated })}
-  //         />
-  //         <MenuBarExtra.Item
-  //           title="End Session"
-  //           onAction={() => launchCommand({ name: "end-session", type: LaunchType.UserInitiated })}
-  //         />
-  //         <MenuBarExtra.Item title="Start Session" />
-  //         <MenuBarExtra.Submenu title="Stats">
-  //           <MenuBarExtra.Item title={`${sessions} Sessions`} />
-  //           <MenuBarExtra.Item title={`${totalMinutes} Total Minutes`} />
-  //           <MenuBarExtra.Item
-  //             title="View History"
-  //             onAction={() => launchCommand({ name: "session-history", type: LaunchType.UserInitiated })}
-  //           />
-  //         </MenuBarExtra.Submenu>
-  //       </MenuBarExtra>
-  //     );
-  //   } else {
-  //     return (
-  //       <MenuBarExtra icon="hackclub.png">
-  //         <MenuBarExtra.Section title={menuTitle} />
-  //         <MenuBarExtra.Item
-  //           title="Start Session"
-  //           onAction={() => launchCommand({ name: "start-session", type: LaunchType.UserInitiated })}
-  //         />
-  //         <MenuBarExtra.Item title="Pause/Resume Session" />
-  //         <MenuBarExtra.Item title="End Session" />
-  //         <MenuBarExtra.Submenu title="Stats">
-  //           <MenuBarExtra.Item title={`${sessions} Sessions`} />
-  //           <MenuBarExtra.Item title={`${totalMinutes} Total Minutes`} />
-  //           <MenuBarExtra.Item
-  //             title="View History"
-  //             onAction={() => launchCommand({ name: "session-history", type: LaunchType.UserInitiated })}
-  //           />
-  //         </MenuBarExtra.Submenu>
-  //       </MenuBarExtra>
-  //     );
-  //   }
-  // } else {
-  //   return (
-  //     <MenuBarExtra icon="hackclub.png">
-  //       <MenuBarExtra.Section title={menuTitle} />
-  //       <MenuBarExtra.Item title="Start Session" />
-  //       <MenuBarExtra.Item title="Pause/Resume Session" />
-  //       <MenuBarExtra.Item title="End Session" />
-  //       <MenuBarExtra.Submenu title="Stats">
-  //         <MenuBarExtra.Item title={`${sessions} Sessions`} />
-  //         <MenuBarExtra.Item title={`${totalMinutes} Total Minutes`} />
-  //         <MenuBarExtra.Item title="View History" />
-  //       </MenuBarExtra.Submenu>
-  //     </MenuBarExtra>
-  //   );
-  // }
+function TopMenuBarItem({ currentSession }: { currentSession: CurrentSession | undefined }) {
+  if (currentSession === undefined) {
+    return <MenuBarExtra.Item icon={Icon.Alarm} title={"Remaining Time"} subtitle={"-"} onAction={() => {}} />;
+  }
+
+  if (currentSession.completed) {
+    return (
+      <MenuBarExtra.Item
+        icon={Icon.Compass}
+        title={"Remaining Time"}
+        subtitle={"No session active"}
+        onAction={() => {}}
+      />
+    );
+  } else {
+    return (
+      <MenuBarExtra.Item
+        icon={Icon.Alarm}
+        title={"Remaining Time"}
+        subtitle={(() => {
+          const endTime = new Date(currentSession.endTime);
+          const currentTime = new Date();
+          const difference = endTime.getTime() - currentTime.getTime();
+          const minutes = Math.floor((difference / (1000 * 60)) % 60);
+          const seconds = Math.floor((difference / 1000) % 60);
+          return `${minutes}m ${seconds}s`;
+        })()}
+        onAction={() => {}}
+      />
+    );
+  }
+}
+
+function SessionInfoItems({ currentSession }: { currentSession: CurrentSession | undefined }) {
+  function ConditionalRender(data: keyof CurrentSession, value: string | undefined) {
+    if (currentSession?.[data] == undefined) {
+      return "-";
+    }
+
+    return value;
+  }
+
+  return (
+    <MenuBarExtra.Section title="Current Session">
+      <MenuBarExtra.Item
+        icon={Icon.BulletPoints}
+        title={"Work"}
+        subtitle={ConditionalRender("work", currentSession?.work.slice(0, 10) + "...")}
+        tooltip={currentSession?.work ? currentSession.work : undefined}
+        onAction={() => {}}
+      />
+      <MenuBarExtra.Item
+        icon={Icon.Clock}
+        title={"Session Length"}
+        subtitle={ConditionalRender("remaining", currentSession?.remaining.toString() + "m")}
+        onAction={() => {}}
+      />
+      <MenuBarExtra.Item
+        icon={Icon.Bolt}
+        title={"Goal"}
+        subtitle={ConditionalRender("goal", currentSession?.goal)}
+        onAction={() => {}}
+      />
+      <MenuBarExtra.Item
+        icon={
+          currentSession?.paused
+            ? currentSession?.paused == true
+              ? Icon.LightBulbOff
+              : Icon.LightBulb
+            : Icon.LightBulb
+        }
+        title={"Status"}
+        subtitle={ConditionalRender("paused", currentSession?.paused ? "Paused" : "Running")}
+        onAction={() => {}}
+      />
+    </MenuBarExtra.Section>
+  );
 }

@@ -2,7 +2,6 @@ import { getPreferenceValues } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
 import fetch from "node-fetch";
 
-
 interface SessionHistoryApiResponse {
   ok: boolean;
   data: HistorySession[];
@@ -37,8 +36,8 @@ export interface CurrentSession {
 }
 
 interface StatsApiResponse {
-    ok: boolean;
-    data: Stats;
+  ok: boolean;
+  data: Stats;
 }
 
 export interface Stats {
