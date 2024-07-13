@@ -40,12 +40,18 @@
       "title": "View Session History",
       "description": "View your Arcade session history",
       "mode": "view"
+    },
+    {
+      "name": "send-scrap-in-slack",
+      "title": "Send Scrap In Slack",
+      "description": "Send a message in your slack thread as a scrap",
+      "mode": "view"
     }
   ],
   "preferences": [
     {
       "name": "apiToken",
-      "title": "API Token",
+      "title": "Hackhour API Token",
       "description": "Your Hack Club Arcade API token",
       "type": "password",
       "required": true,
@@ -58,6 +64,13 @@
       "type": "textfield",
       "required": true,
       "placeholder": "Visit #what-is-my-slack-id in the Hack Club Slack to get your User ID"
+    },
+    {
+      "name": "slackApiToken",
+      "title": "Slack API Token",
+      "description": "Your Slack app's API token",
+      "type": "password",
+      "required": false
     }
   ],
   "dependencies": {

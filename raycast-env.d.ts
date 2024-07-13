@@ -8,10 +8,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 type ExtensionPreferences = {
-  /** API Token - Your Hack Club Arcade API token */
+  /** Hackhour API Token - Your Hack Club Arcade API token */
   "apiToken": string,
   /** Slack User ID - Your Slack User ID */
-  "userid": string
+  "userid": string,
+  /** Slack API Token - Your Slack app's API token */
+  "slackApiToken"?: string
 }
 
 /** Preferences accessible in all the extension's commands */
@@ -28,6 +30,8 @@ declare namespace Preferences {
   export type EndSession = ExtensionPreferences & {}
   /** Preferences accessible in the `session-history` command */
   export type SessionHistory = ExtensionPreferences & {}
+  /** Preferences accessible in the `send-scrap-in-slack` command */
+  export type SendScrapInSlack = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
@@ -41,6 +45,8 @@ declare namespace Arguments {
   export type EndSession = {}
   /** Arguments passed to the `session-history` command */
   export type SessionHistory = {}
+  /** Arguments passed to the `send-scrap-in-slack` command */
+  export type SendScrapInSlack = {}
 }
 
 
