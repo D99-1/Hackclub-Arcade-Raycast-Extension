@@ -11,7 +11,7 @@ import {
 } from "@raycast/api";
 import fetch from "node-fetch";
 import { useCachedPromise } from "@raycast/utils";
-import { CurrentSession, getCurrentSession, getStats } from "./api";
+import { CurrentSession, getCurrentSession, getStats, Stats } from "./api";
 
 export default function Command() {
   const { data: currentSessionData } = useCachedPromise(getCurrentSession);
@@ -31,57 +31,8 @@ export default function Command() {
     <MenuBarExtra icon="hackclub.png">
       <TopMenuBarItem currentSession={currentSessionData} />
       <SessionInfoItems currentSession={currentSessionData} />
-
-      <MenuBarExtra.Section>
-        <MenuBarExtra.Item
-          icon={Icon.StarCircle}
-          title={"Start Session"}
-          onAction={
-            currentSessionData?.completed == true
-              ? () => launchCommand({ name: "start-session", type: LaunchType.UserInitiated })
-              : undefined
-          }
-        />
-        <MenuBarExtra.Item
-          icon={Icon.Play}
-          title={"Pause/Resume Session"}
-          onAction={
-            currentSessionData?.completed == false
-              ? () => launchCommand({ name: "pause-session", type: LaunchType.UserInitiated })
-              : undefined
-          }
-        />
-        <MenuBarExtra.Item
-          icon={Icon.CheckCircle}
-          title={"End Session"}
-          onAction={
-            currentSessionData?.completed == false
-              ? () => launchCommand({ name: "end-session", type: LaunchType.UserInitiated })
-              : undefined
-          }
-        />
-      </MenuBarExtra.Section>
-      <MenuBarExtra.Section>
-        <MenuBarExtra.Item
-          icon={Icon.Book}
-          title={"Session History"}
-          onAction={() => launchCommand({ name: "session-history", type: LaunchType.UserInitiated })}
-        />
-        <MenuBarExtra.Submenu icon={Icon.BarChart} title="Stats">
-          <MenuBarExtra.Item
-            icon={Icon.Hashtag}
-            title={"Sessions"}
-            subtitle={statsData?.sessions ? statsData.sessions.toString() : "-"}
-            onAction={() => {}}
-          />
-          <MenuBarExtra.Item
-            icon={Icon.Clock}
-            title={"Total Minutes"}
-            subtitle={statsData?.total ? statsData.total.toString() : "-"}
-            onAction={() => {}}
-          />
-        </MenuBarExtra.Submenu>
-      </MenuBarExtra.Section>
+      <SessionControlItems currentSession={currentSessionData} />
+      <OtherSessionItems stats={statsData} />
       <MenuBarExtra.Section>
         <MenuBarExtra.Item icon={Icon.Gear} title={"Settings"} onAction={() => openCommandPreferences()} />
       </MenuBarExtra.Section>
@@ -164,6 +115,66 @@ function SessionInfoItems({ currentSession }: { currentSession: CurrentSession |
         subtitle={ConditionalRender("paused", currentSession?.paused ? "Paused" : "Running")}
         onAction={() => {}}
       />
+    </MenuBarExtra.Section>
+  );
+}
+
+function SessionControlItems({ currentSession }: { currentSession: CurrentSession | undefined }) {
+  return (
+    <MenuBarExtra.Section>
+      <MenuBarExtra.Item
+        icon={Icon.StarCircle}
+        title={"Start Session"}
+        onAction={
+          currentSession?.completed == true
+            ? () => launchCommand({ name: "start-session", type: LaunchType.UserInitiated })
+            : undefined
+        }
+      />
+      <MenuBarExtra.Item
+        icon={Icon.Play}
+        title={"Pause/Resume Session"}
+        onAction={
+          currentSession?.completed == false
+            ? () => launchCommand({ name: "pause-session", type: LaunchType.UserInitiated })
+            : undefined
+        }
+      />
+      <MenuBarExtra.Item
+        icon={Icon.CheckCircle}
+        title={"End Session"}
+        onAction={
+          currentSession?.completed == false
+            ? () => launchCommand({ name: "end-session", type: LaunchType.UserInitiated })
+            : undefined
+        }
+      />
+    </MenuBarExtra.Section>
+  );
+}
+
+function OtherSessionItems({ stats }: { stats: Stats | undefined }) {
+  return (
+    <MenuBarExtra.Section>
+      <MenuBarExtra.Item
+        icon={Icon.Book}
+        title={"Session History"}
+        onAction={() => launchCommand({ name: "session-history", type: LaunchType.UserInitiated })}
+      />
+      <MenuBarExtra.Submenu icon={Icon.BarChart} title="Stats">
+        <MenuBarExtra.Item
+          icon={Icon.Hashtag}
+          title={"Sessions"}
+          subtitle={stats?.sessions ? stats.sessions.toString() : "-"}
+          onAction={() => {}}
+        />
+        <MenuBarExtra.Item
+          icon={Icon.Clock}
+          title={"Total Minutes"}
+          subtitle={stats?.total ? stats.total.toString() : "-"}
+          onAction={() => {}}
+        />
+      </MenuBarExtra.Submenu>
     </MenuBarExtra.Section>
   );
 }
