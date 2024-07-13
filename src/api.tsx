@@ -45,6 +45,16 @@ export interface Stats {
   total: number;
 }
 
+interface GoalsApiResponse {
+  ok: boolean;
+  data: Goal[];
+}
+
+export interface Goal {
+  name: string;
+  minutes: number;
+}
+
 export async function getSessionHistory() {
   try {
     const response = await fetch(`https://hackhour.hackclub.com/api/history/${getPreferenceValues().userid}`, {
@@ -111,6 +121,29 @@ export async function getStats() {
     const currentSession: Stats = data.data;
 
     return currentSession;
+  } catch (error) {
+    console.error("An error occurred", error);
+  }
+}
+
+export async function getGoals() {
+  try {
+    const response = await fetch(`https://hackhour.hackclub.com/api/goals/${getPreferenceValues().userid}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getPreferenceValues().apiToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      showFailureToast(response.statusText, { title: "Failed to fetch goals" });
+    }
+
+    const data = (await response.json()) as GoalsApiResponse;
+    const goals: Goal[] = data.data;
+
+    return goals;
   } catch (error) {
     console.error("An error occurred", error);
   }

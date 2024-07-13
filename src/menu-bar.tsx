@@ -11,11 +11,12 @@ import {
 } from "@raycast/api";
 import fetch from "node-fetch";
 import { useCachedPromise } from "@raycast/utils";
-import { CurrentSession, getCurrentSession, getStats, Stats } from "./api";
+import { CurrentSession, getCurrentSession, getGoals, getStats, Goal, Stats } from "./api";
 
 export default function Command() {
   const { data: currentSessionData } = useCachedPromise(getCurrentSession);
   const { data: statsData } = useCachedPromise(getStats);
+  const { data: goalsData } = useCachedPromise(getGoals);
 
   /*const [remaining, setRemaining] = useState(0);
   const cache = new Cache();*/
@@ -32,7 +33,7 @@ export default function Command() {
       <TopMenuBarItem currentSession={currentSessionData} />
       <SessionInfoItems currentSession={currentSessionData} />
       <SessionControlItems currentSession={currentSessionData} />
-      <OtherSessionItems stats={statsData} />
+      <OtherSessionItems stats={statsData} goals={goalsData} />
       <MenuBarExtra.Section>
         <MenuBarExtra.Item icon={Icon.Gear} title={"Settings"} onAction={() => openCommandPreferences()} />
       </MenuBarExtra.Section>
@@ -75,7 +76,7 @@ function TopMenuBarItem({ currentSession }: { currentSession: CurrentSession | u
 
 function SessionInfoItems({ currentSession }: { currentSession: CurrentSession | undefined }) {
   function ConditionalRender(data: keyof CurrentSession, value: string | undefined) {
-    if (currentSession?.[data] == undefined) {
+    if (currentSession?.[data] == undefined || currentSession?.completed == true) {
       return "-";
     }
 
@@ -153,7 +154,7 @@ function SessionControlItems({ currentSession }: { currentSession: CurrentSessio
   );
 }
 
-function OtherSessionItems({ stats }: { stats: Stats | undefined }) {
+function OtherSessionItems({ stats, goals }: { stats: Stats | undefined; goals: Goal[] | undefined }) {
   return (
     <MenuBarExtra.Section>
       <MenuBarExtra.Item
@@ -161,6 +162,24 @@ function OtherSessionItems({ stats }: { stats: Stats | undefined }) {
         title={"Session History"}
         onAction={() => launchCommand({ name: "session-history", type: LaunchType.UserInitiated })}
       />
+      <MenuBarExtra.Submenu icon={Icon.Bolt} title="Goals">
+        {goals?.map((goal: Goal) => (
+          <MenuBarExtra.Section key={goal.name}>
+            <MenuBarExtra.Item
+              icon={Icon.TextCursor}
+              title={"Name"}
+              subtitle={goal.name}
+              onAction={() => {}}
+            />
+            <MenuBarExtra.Item
+              icon={Icon.Clock}
+              title={"Minutes"}
+              subtitle={goal.minutes.toString()}
+              onAction={() => {}}
+            />
+          </MenuBarExtra.Section>
+        ))}
+      </MenuBarExtra.Submenu>
       <MenuBarExtra.Submenu icon={Icon.BarChart} title="Stats">
         <MenuBarExtra.Item
           icon={Icon.Hashtag}
