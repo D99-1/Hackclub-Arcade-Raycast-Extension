@@ -20,3 +20,7 @@ All these actions can also be completed through an added menu bar icon.
 ![screenshot8](https://github.com/user-attachments/assets/25be4e14-2672-4ac0-8d98-bb29fba46105)
 ![screenshot9](https://github.com/user-attachments/assets/94c9fb58-bf9d-4b8d-b046-bd1540b82abe)
 ![screenshot10](https://github.com/user-attachments/assets/0cae9003-8134-45d4-a052-7291118dc2e3)
+
+## Scrap Posting
+
+In order to post scraps from the extension, you will need to create a new slack application with `chat:write` and `files:write` permissions. Then, add it to hackclub and copy its user token.
