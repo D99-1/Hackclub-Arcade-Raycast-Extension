@@ -172,7 +172,7 @@ export async function startSession(work: string) {
 
 export async function endSession() {
   try {
-    const response = await fetch(`https://hackhour.hackclub.com/api/end/${getPreferenceValues().userid}`, {
+    const response = await fetch(`https://hackhour.hackclub.com/api/cancel/${getPreferenceValues().userid}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -181,7 +181,7 @@ export async function endSession() {
     });
 
     if (!response.ok) {
-      await showHUD("Failed to end session");
+      await showFailureToast(response.statusText, { title: "Failed to end session" });
     }
 
     await showHUD("Session ended successfully!");
@@ -211,7 +211,7 @@ export async function pauseSession() {
     });
 
     if (!response.ok) {
-      await showHUD("Failed to end session");
+      await showFailureToast(response.statusText, { title: "Failed to pause session" });
     }
     const data = (await response.json()) as PauseApiResponse;
 

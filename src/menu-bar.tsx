@@ -11,10 +11,10 @@ import {
 } from "@raycast/api";
 import fetch from "node-fetch";
 import { useCachedPromise } from "@raycast/utils";
-import { CurrentSession, getCurrentSession, getGoals, getStats, Goal, Stats } from "./api";
+import { CurrentSession, endSession, getCurrentSession, getGoals, getStats, Goal, pauseSession, Stats } from "./api";
 
 export default function Command() {
-  const { data: currentSessionData, revalidate } = useCachedPromise(getCurrentSession);
+  const { data: currentSessionData, revalidate: refetchCurrentSession } = useCachedPromise(getCurrentSession);
   const { data: statsData } = useCachedPromise(getStats);
   const { data: goalsData } = useCachedPromise(getGoals);
 
@@ -32,7 +32,7 @@ export default function Command() {
     <MenuBarExtra icon="hackclub.png">
       <TopMenuBarItem currentSession={currentSessionData} />
       <SessionInfoItems currentSession={currentSessionData} />
-      <SessionControlItems currentSession={currentSessionData} />
+      <SessionControlItems currentSession={currentSessionData} refetch={refetchCurrentSession}/>
       <OtherSessionItems stats={statsData} goals={goalsData} />
       <MenuBarExtra.Section>
         <MenuBarExtra.Item icon={Icon.Gear} title={"Settings"} onAction={() => openCommandPreferences()} />
@@ -95,7 +95,7 @@ function SessionInfoItems({ currentSession }: { currentSession: CurrentSession |
       <MenuBarExtra.Item
         icon={Icon.Clock}
         title={"Session Length"}
-        subtitle={ConditionalRender("remaining", currentSession?.remaining.toString() + "m")}
+        subtitle={ConditionalRender("elapsed", currentSession?.elapsed.toString() + "m")}
         onAction={() => {}}
       />
       <MenuBarExtra.Item
@@ -120,7 +120,7 @@ function SessionInfoItems({ currentSession }: { currentSession: CurrentSession |
   );
 }
 
-function SessionControlItems({ currentSession }: { currentSession: CurrentSession | undefined }) {
+function SessionControlItems({ currentSession, refetch }: { currentSession: CurrentSession | undefined, refetch: () => void }) {
   return (
     <MenuBarExtra.Section>
       <MenuBarExtra.Item
@@ -137,7 +137,10 @@ function SessionControlItems({ currentSession }: { currentSession: CurrentSessio
         title={"Pause/Resume Session"}
         onAction={
           currentSession?.completed == false
-            ? () => launchCommand({ name: "pause-session", type: LaunchType.UserInitiated })
+            ? async () => {
+                await pauseSession();
+                refetch();
+              }
             : undefined
         }
       />
@@ -146,7 +149,10 @@ function SessionControlItems({ currentSession }: { currentSession: CurrentSessio
         title={"End Session"}
         onAction={
           currentSession?.completed == false
-            ? () => launchCommand({ name: "end-session", type: LaunchType.UserInitiated })
+            ? async () => {
+                await endSession();
+                refetch();
+              }
             : undefined
         }
       />
@@ -165,12 +171,7 @@ function OtherSessionItems({ stats, goals }: { stats: Stats | undefined; goals: 
       <MenuBarExtra.Submenu icon={Icon.Bolt} title="Goals">
         {goals?.map((goal: Goal) => (
           <MenuBarExtra.Section key={goal.name}>
-            <MenuBarExtra.Item
-              icon={Icon.TextCursor}
-              title={"Name"}
-              subtitle={goal.name}
-              onAction={() => {}}
-            />
+            <MenuBarExtra.Item icon={Icon.TextCursor} title={"Name"} subtitle={goal.name} onAction={() => {}} />
             <MenuBarExtra.Item
               icon={Icon.Clock}
               title={"Minutes"}
