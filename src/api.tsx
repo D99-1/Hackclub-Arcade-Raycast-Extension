@@ -1,5 +1,6 @@
 import { getPreferenceValues, PopToRootType, showHUD } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
+import { WebClient } from "@slack/web-api";
 import fetch from "node-fetch";
 
 interface SessionHistoryApiResponse {
@@ -219,4 +220,15 @@ export async function pauseSession() {
   } catch (error) {
     console.error("An error occurred", error);
   }
+}
+
+let webClient: WebClient;
+export function useSlack() {
+  const slackApiToken = getPreferenceValues().slackApiToken;
+  if (!slackApiToken) {
+    return;
+  }
+
+  webClient = webClient ?? new WebClient(slackApiToken);
+  return webClient
 }
