@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Action, Form, ActionPanel, showHUD, Toast, getPreferenceValues, showToast, popToRoot } from "@raycast/api";
+import { useState } from "react";
+import { Action, Form, ActionPanel } from "@raycast/api";
 import fetch from "node-fetch";
 import { startSession } from "./api";
 

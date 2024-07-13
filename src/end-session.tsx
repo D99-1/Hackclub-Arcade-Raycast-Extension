@@ -1,4 +1,4 @@
-import { getPreferenceValues, showHUD, Alert, confirmAlert } from "@raycast/api";
+import { Alert, confirmAlert } from "@raycast/api";
 import fetch from "node-fetch";
 import { endSession } from "./api";
 

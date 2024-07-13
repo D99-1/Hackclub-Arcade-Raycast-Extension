@@ -1,9 +1,5 @@
-import { useState, useEffect } from "react";
 import {
   MenuBarExtra,
-  showToast,
-  Toast,
-  getPreferenceValues,
   launchCommand,
   LaunchType /* Cache */,
   Icon,
