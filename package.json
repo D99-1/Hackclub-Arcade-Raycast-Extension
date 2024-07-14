@@ -15,7 +15,7 @@
       "title": "Manage Session",
       "description": "Manage your Arcade session from the menu bar",
       "mode": "menu-bar",
-      "interval": "10s"
+      "interval": "30s"
     },
     {
       "name": "start-session",
@@ -40,14 +40,20 @@
       "title": "View Session History",
       "description": "View your Arcade session history",
       "mode": "view"
+    },
+    {
+      "name": "send-scrap-in-slack",
+      "title": "Send Scrap In Slack",
+      "description": "Send a message in your slack thread as a scrap",
+      "mode": "view"
     }
   ],
   "preferences": [
     {
       "name": "apiToken",
-      "title": "API Token",
+      "title": "Hackhour API Token",
       "description": "Your Hack Club Arcade API token",
-      "type": "textfield",
+      "type": "password",
       "required": true,
       "placeholder": "Run /api in #arcade on Slack to get your API token"
     },
@@ -58,11 +64,19 @@
       "type": "textfield",
       "required": true,
       "placeholder": "Visit #what-is-my-slack-id in the Hack Club Slack to get your User ID"
+    },
+    {
+      "name": "slackApiToken",
+      "title": "Slack API Token",
+      "description": "Your Slack app's API token",
+      "type": "password",
+      "required": false
     }
   ],
   "dependencies": {
     "@raycast/api": "^1.78.1",
     "@raycast/utils": "^1.16.2",
+    "@slack/web-api": "^7.3.1",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
