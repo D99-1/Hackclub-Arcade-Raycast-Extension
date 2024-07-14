@@ -53,9 +53,8 @@ export default function SendScrapInSlack() {
 
           toast.style = Toast.Style.Success;
           toast.message = "Uploaded files";
-          
+
         } else {
-          console.log("attachments" + JSON.stringify(attachments));
           const response = await slack?.chat.postMessage({
             text: values.text,
             channel: "C06SBHMQU8G",
