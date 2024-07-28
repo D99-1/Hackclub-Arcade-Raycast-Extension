@@ -165,7 +165,7 @@ export async function startSession(work: string) {
       await showFailureToast(response.statusText, { title: "Failed to start session" });
     }
 
-    await showHUD("Session started successfully!", { popToRootType: PopToRootType.Default });
+    await showHUD("Session started successfully!", { popToRootType: PopToRootType.Immediate });
   } catch (error) {
     console.error("An error occurred", error);
   }
